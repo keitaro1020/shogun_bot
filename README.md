@@ -1,1 +1,3 @@
-i#hogun_bot
+# shogun_bot
+
+最終目的は「弁当屋が来たら自動通知する」
