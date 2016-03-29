@@ -1,7 +1,6 @@
 cronJob = require('cron').CronJob
 
 module.exports = (robot) ->
-    date = new Date
     new cronJob '0 45 12 * * 1-5', () =>
         envelope = room: "bento_shogun"
         robot.send envelope, '@channel: そろそろ将軍様が参られますぞ:shogun:'
