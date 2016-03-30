@@ -1,3 +1,18 @@
+# Description:
+#   cron test
+#
+# Dependencies:
+#   None
+#
+# Configuration:
+#   None
+#
+# Commands:
+#   None
+#
+# Author:
+#   shishido
+
 cronJob = require('cron').CronJob
 
 module.exports = (robot) ->

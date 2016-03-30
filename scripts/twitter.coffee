@@ -1,3 +1,19 @@
+# Description:
+#   twitter API
+#
+# Dependencies:
+#   None
+#
+# Configuration:
+#   TWITTER_BEARER_TOKEN
+#
+# Commands:
+#   hubot 公式ツイッター - bento shogun twitter account
+#   hubot (最新ツイート|new tweet) - bento shogun twitter new tweet
+#
+# Author:
+#   shishido
+
 config = 
     baseURL: 'https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=bentoshogun&exclude_replies=false&include_rts=false',
     authorization: 'Bearer ' + process.env.TWITTER_BEARER_TOKEN

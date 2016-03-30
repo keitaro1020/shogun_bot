@@ -1,3 +1,21 @@
+# Description:
+#   bento-shogun menu API
+#
+# Dependencies:
+#   None
+#
+# Configuration:
+#   None
+#
+# Commands:
+#   hubot (メニュー|めにゅー|Menu|MENU) - Week menu
+#   hubot setupmenu - menu setup
+#   hubot menulist - menu date listup
+#   hubot menu <date> - get menu
+#
+# Author:
+#   shishido
+
 request = require('request')
 cheerio = require('cheerio')
 redis = require('redis')

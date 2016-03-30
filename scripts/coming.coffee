@@ -1,3 +1,18 @@
+# Description:
+#   comming API
+#
+# Dependencies:
+#   None
+#
+# Configuration:
+#   None
+#
+# Commands:
+#   hubot 来た - bento shogun come here
+#
+# Author:
+#   shishido
+
 cronJob = require('cron').CronJob
 
 module.exports = (robot) ->
