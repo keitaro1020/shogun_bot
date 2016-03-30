@@ -8,7 +8,6 @@
 #   None
 #
 # Commands:
-#   hubot (メニュー|めにゅー|Menu|MENU) - Week menu
 #   hubot setupmenu - menu setup
 #   hubot menulist - menu date listup
 #   hubot menu <date> - get menu
@@ -22,22 +21,23 @@ redis = require('redis')
 cronJob = require('cron').CronJob
 
 menukey = 'shogun_menu'
+days = ["日", "月", "火", "水", "木", "金", "土"]
 
 module.exports = (robot) ->
-    robot.hear /(メニュー|めにゅー|Menu|MENU)/, (msg) ->
-        request 'http://bento-shogun.jp/menu/week/week.html', (err, res, body) ->
-            $ = cheerio.load body
-            $('div.menu-inner').each ->
-                message = ''
-                message += $(this).children('span').text() + '\n'
-                $(this).children('ul').children('li').each ->
-                    menu = $(this).children('dl').children('dt').text()
-                    if menu
-                        message += '・' + menu + '\n'
-                        robot.logger.info "menu data get [menu :" + menu + "]"
-                    message += '\n'
-                message += 'http://bento-shogun.jp/menu/week/week.html'
-                msg.send message
+#    robot.hear /(メニュー|めにゅー|Menu|MENU)/, (msg) ->
+#        request 'http://bento-shogun.jp/menu/week/week.html', (err, res, body) ->
+#            $ = cheerio.load body
+#            $('div.menu-inner').each ->
+#                message = ''
+#                message += $(this).children('span').text() + '\n'
+#                $(this).children('ul').children('li').each ->
+#                    menu = $(this).children('dl').children('dt').text()
+#                    if menu
+#                        message += '・' + menu + '\n'
+#                        robot.logger.info "menu data get [menu :" + menu + "]"
+#                    message += '\n'
+#                message += 'http://bento-shogun.jp/menu/week/week.html'
+#                msg.send message
     robot.respond /setupmenu/, (msg) ->
         robot.logger.info 'setupmenu'
         setupmenu()
@@ -53,6 +53,34 @@ module.exports = (robot) ->
             msg.reply message
     robot.respond /menu (.*)/i, (msg) ->
         target = msg.match[1]
+        getmenu(msg, target)
+    new cronJob '0 40 9 * * 1-5', () =>
+        robot.logger.info 'setupmenu cron execute'
+        setupmenu()
+    , null, true, "Asia/Tokyo"
+    new cronJob '0 0 12 * * 1-5', (msg) ->
+        date = new Date
+        target = (date.getMonth() + 1) + '月' + date.getDate() + '日(' + days[date.getDay()] + ')'
+        robot.logger.info 'menu cron ' + target
+        client = redis.createClient()
+        client.hget menukey, target, (err, reply) ->
+            if err
+                throw err
+            else if reply
+                envelope = room: "bento_shogun"
+                robot.send envelope, '@channel: 本日のお品書きにござる:shogun:\n' + reply
+            else
+                robot.logger.info 'menu not found'
+    , null, true, "Asia/Tokyo"
+
+    getmenu = (msg, target) ->
+        if(target == 'today' || target == '今日')
+            date = new Date
+            target = (date.getMonth() + 1) + '月' + date.getDate() + '日(' + days[date.getDay()] + ')'
+        else if(target == 'tomorrow' || target == '明日')
+            tomorrow = new Date
+            tomorrow.setTime(tomorrow.getTime() + 1 * 24 * 60 * 60 * 1000)
+            target = (tomorrow.getMonth() + 1) + '月' + tomorrow.getDate() + '日(' + days[tomorrow.getDay()] + ')'
         robot.logger.info 'menu ' + target
         client = redis.createClient()
         client.hget menukey, target, (err, reply) ->
@@ -62,10 +90,6 @@ module.exports = (robot) ->
                 msg.reply '\n' + reply
             else
                 msg.reply '見つかりませんでした'
-    new cronJob '0 40 9 * * 1-5', () =>
-        robot.logger.info 'setupmenu cron execute'
-        setupmenu()
-    , null, true, "Asia/Tokyo"
 
     setupmenu = () ->
         robot.logger.info 'setupmenu func'
