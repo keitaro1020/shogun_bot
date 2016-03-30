@@ -44,9 +44,10 @@ module.exports = (robot) ->
                 msg.reply '\n' + reply
             else
                 msg.reply '見つかりませんでした'
-    new cronJob '0 0 9 * * 1-5', () =>
+    new cronJob '0 40 9 * * 1-5', () =>
         robot.logger.info 'setupmenu cron execute'
         setupmenu()
+    , null, true, "Asia/Tokyo"
 
     setupmenu = () ->
         robot.logger.info 'setupmenu func'
