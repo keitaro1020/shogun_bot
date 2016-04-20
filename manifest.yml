@@ -4,4 +4,5 @@ applications:
       path: .
       instances: 1
       memory: 256M
+      name: shogun_bot
 

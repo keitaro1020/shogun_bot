@@ -19,9 +19,18 @@ request = require('request')
 cheerio = require('cheerio')
 redis = require('redis')
 cronJob = require('cron').CronJob
+url = require('url')
 
 menukey = 'shogun_menu'
 days = ["日", "月", "火", "水", "木", "金", "土"]
+
+if(process.env.REDIS_URL)
+    rtg = url.parse(process.env.REDIS_URL)
+    client = redis.createClient(rtg.port, rtg.hostname)
+    client.auth(rtg.auth);
+else
+    client = redis.createClient()
+
 
 module.exports = (robot) ->
 #    robot.hear /(メニュー|めにゅー|Menu|MENU)/, (msg) ->
@@ -43,7 +52,6 @@ module.exports = (robot) ->
         setupmenu()
     robot.respond /menulist/, (msg) ->
         robot.logger.info 'menulist'
-        client = redis.createClient()
         client.hkeys menukey, (err, replies) ->
             message = '\n'
             replies.forEach((reply, i) ->
@@ -62,7 +70,6 @@ module.exports = (robot) ->
         date = new Date
         target = (date.getMonth() + 1) + '月' + date.getDate() + '日(' + days[date.getDay()] + ')'
         robot.logger.info 'menu cron ' + target
-        client = redis.createClient()
         client.hget menukey, target, (err, reply) ->
             if err
                 throw err
@@ -82,7 +89,6 @@ module.exports = (robot) ->
             tomorrow.setTime(tomorrow.getTime() + 1 * 24 * 60 * 60 * 1000)
             target = (tomorrow.getMonth() + 1) + '月' + tomorrow.getDate() + '日(' + days[tomorrow.getDay()] + ')'
         robot.logger.info 'menu ' + target
-        client = redis.createClient()
         client.hget menukey, target, (err, reply) ->
             if err
                 throw err
@@ -109,7 +115,6 @@ module.exports = (robot) ->
                 robot.logger.info "menu data get [menuDate :" + menuDate + "][menu :" + message + "]"
                 key = menuDate
                 menuHash[key] = message
-            client = redis.createClient()
             client.del menukey
             client.hmset menukey, menuHash
             robot.logger.info menuHash
