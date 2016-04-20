@@ -90,6 +90,7 @@ module.exports = (robot) ->
                 msg.reply '\n' + reply
             else
                 msg.reply '見つかりませんでした'
+                setupmenu()
 
     setupmenu = () ->
         robot.logger.info 'setupmenu func'

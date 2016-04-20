@@ -26,3 +26,7 @@ module.exports = (robot) ->
     msg.reply '呼んだ？:shogun:'
   robot.hear /手動/, (msg) ->
     msg.reply 'あかんのか？'
+  robot.respond /ありがとう/, (msg) ->
+    msg.reply 'ええんやで'
+  robot.respond /おかえり/, (msg) ->
+    msg.reply '戻ったぞ'
