@@ -30,3 +30,5 @@ module.exports = (robot) ->
     msg.reply 'ええんやで'
   robot.respond /おかえり/, (msg) ->
     msg.reply '戻ったぞ'
+  robot.respond /TEST/, (msg) ->
+    msg.reply 'またテストか'
