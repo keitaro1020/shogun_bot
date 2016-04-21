@@ -22,6 +22,10 @@ module.exports = (robot) ->
     , null, true, "Asia/Tokyo"
     robot.respond /来た/, (msg) ->
         date = new Date
+        offset = date.getTimezoneOffset() * -1
+        if offset != 540
+            addMin = 540 - offset
+            date.setMinutes(date.getMinutes + addMin)
         if date.getHours() > 11 and date.getHours() < 14
             envelope = room: "bento_shogun"
             robot.send envelope, '@channel: 将軍様のおなーりー:shogun:'
