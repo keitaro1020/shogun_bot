@@ -68,7 +68,7 @@ module.exports = (robot) ->
         setupmenu()
     , null, true, "Asia/Tokyo"
     new cronJob '0 0 12 * * 1-5', (msg) ->
-        date = moment().zone("Asia/Tokyo").local().toDate()
+        date = moment().utcOffset("Asia/Tokyo").local().toDate()
         target = (date.getMonth() + 1) + '月' + date.getDate() + '日(' + days[date.getDay()] + ')'
         robot.logger.info 'menu cron ' + target
         client.hget menukey, target, (err, reply) ->
@@ -83,10 +83,10 @@ module.exports = (robot) ->
 
     getmenu = (msg, target) ->
         if(target == 'today' || target == '今日')
-            date = moment().zone("Asia/Tokyo").local().toDate()
+            date = moment().utcOffset("Asia/Tokyo").local().toDate()
             target = (date.getMonth() + 1) + '月' + date.getDate() + '日(' + days[date.getDay()] + ')'
         else if(target == 'tomorrow' || target == '明日')
-            tomorrow = moment().zone("Asia/Tokyo").local().toDate()
+            tomorrow = moment().utcOffset("Asia/Tokyo").local().toDate()
             tomorrow.setTime(tomorrow.getTime() + 1 * 24 * 60 * 60 * 1000)
             target = (tomorrow.getMonth() + 1) + '月' + tomorrow.getDate() + '日(' + days[tomorrow.getDay()] + ')'
         robot.logger.info 'menu ' + target

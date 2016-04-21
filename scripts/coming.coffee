@@ -22,7 +22,7 @@ module.exports = (robot) ->
         robot.send envelope, '@channel: そろそろ将軍様が参られますぞ:shogun:'
     , null, true, "Asia/Tokyo"
     robot.respond /来た/, (msg) ->
-        date = moment().zone("Asia/Tokyo").local().toDate()
+        date = moment().utcOffset("Asia/Tokyo").local().toDate()
         if date.getHours() > 11 and date.getHours() < 14
             envelope = room: "bento_shogun"
             robot.send envelope, '@channel: 将軍様のおなーりー:shogun:'

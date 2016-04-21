@@ -35,5 +35,5 @@ module.exports = (robot) ->
   robot.respond /TEST/, (msg) ->
     msg.reply 'またテストか'
   robot.respond /今何時/, (msg) ->
-    date = moment().zone("Asia/Tokyo").local().toDate()
-    msg.reply date.format()
+    date = moment().utcOffset("Asia/Tokyo").local().toDate()
+    msg.reply date
