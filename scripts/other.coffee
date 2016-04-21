@@ -11,9 +11,11 @@
 #   hubot 仕事しろ - work
 #   hubot :shogun: - :shogun:
 #   hubot 手動 - ....
+#   hubot 今何時 - servertime(JST)
 #
 # Author:
 #   shishido
+moment = require('moment')
 
 module.exports = (robot) ->
   date = new Date
@@ -32,3 +34,6 @@ module.exports = (robot) ->
     msg.reply '戻ったぞ'
   robot.respond /TEST/, (msg) ->
     msg.reply 'またテストか'
+  robot.respond /今何時/, (msg) ->
+    date = moment().zone("Asia/Tokyo").local().toDate()
+    msg.reply date.format()
