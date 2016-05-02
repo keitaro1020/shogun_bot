@@ -72,13 +72,14 @@ module.exports = (robot) ->
         target = (date.month() + 1) + '月' + date.date() + '日(' + days[date.day()] + ')'
         robot.logger.info 'menu cron ' + target
         client.hget menukey, target, (err, reply) ->
+            envelope = room: "bento_shogun"
             if err
                 throw err
             else if reply
-                envelope = room: "bento_shogun"
                 robot.send envelope, '@channel: 本日のお品書きにござる:shogun:\n' + reply
             else
                 robot.logger.info 'menu not found'
+                robot.send envelope, 'かたじけない！今日は休みでござる！'
     , null, true, "Asia/Tokyo"
 
     getmenu = (msg, target) ->
